@@ -20,6 +20,9 @@
 
         <!-- Right aligned nav items -->
         <b-navbar-nav class="ml-auto">
+          <b-nav-item to="/login" v-if="!user">Login</b-nav-item>
+          <b-nav-item to="/signup" v-if="!user">Sign Up</b-nav-item>
+          <b-nav-item v-if="user" @click="logout">Logout</b-nav-item>
           <b-nav-form>
             <b-form-input
               size="sm"
@@ -35,3 +38,21 @@
     </b-navbar>
   </div>
 </template>
+
+<script>
+import { mapGetters } from "vuex";
+
+export default {
+  // props: ["user"],
+  methods: {
+    logout() {
+      // localStorage.removeItem("user");
+      this.$store.dispatch("user", null);
+      this.$router.push("/");
+    },
+  },
+  computed: {
+    ...mapGetters(["user"]),
+  },
+};
+</script>

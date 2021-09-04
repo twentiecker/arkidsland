@@ -3,8 +3,8 @@
 
 module.exports = {
   // with subdomain
-  // publicPath: process.env.NODE_ENV === "production" ? "/arkidsland/" : "/",
+  publicPath: process.env.NODE_ENV === "production" ? "/arkidsland/" : "/",
 
   // without subdomain (example)
-  publicPath: process.env.NODE_ENV === "production" ? "/" : "/",
+  // publicPath: process.env.NODE_ENV === "production" ? "/" : "/",
 };

@@ -28,6 +28,24 @@ const routes = [
     component: () =>
       import(/* webpackChunkName: "detail" */ "../components/Detail.vue"),
   },
+  {
+    path: "/login",
+    name: "Login",
+    // route level code-splitting
+    // this generates a separate chunk (detail.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () =>
+      import(/* webpackChunkName: "login" */ "../views/Login.vue"),
+  },
+  {
+    path: "/signup",
+    name: "Signup",
+    // route level code-splitting
+    // this generates a separate chunk (detail.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () =>
+      import(/* webpackChunkName: "signup" */ "../views/Signup.vue"),
+  },
 ];
 
 // eslint-disable-next-line no-new

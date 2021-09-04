@@ -15,6 +15,15 @@ export default {
   components: {
     Navbar,
   },
+  // data() {
+  //   return {
+  //     user: null,
+  //   };
+  // },
+  // created: function() {
+  //   let self = this;
+  //   self.user = JSON.parse(localStorage.getItem("user"));
+  // },
 };
 </script>
 

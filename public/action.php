@@ -3,7 +3,7 @@
 //action.php
 
 // local connection database
-$connect = new PDO("mysql:host=localhost;dbname=testing", "root", "");
+$connect = new PDO("mysql:host=localhost;dbname=arkidsland", "root", "");
 
 // certain server connection database (example)
 // $connect = new PDO("mysql:host=sql208.epizy.com;dbname=epiz_29176098_ambulan", "epiz_29176098", "2XKPfcvIvHd");
@@ -59,31 +59,92 @@ if($received_data->action == 'fetchall')
  echo json_encode($data);
 }
 
-// insert action
-if($received_data->action == 'insert')
+// signup action
+if($received_data->action == 'signup')
 {
  $data = array(
-  ':first_name' => $received_data->firstName,
-  ':last_name' => $received_data->lastName,
-  ':gender' => $received_data->gender,
-  ':hobby' => $received_data->hobby
+  ':first' => $received_data->first,
+  ':last' => $received_data->last,
+  ':email' => $received_data->email,
+  ':pass' => $received_data->pass
  );
-
+ 
  $query = "
- INSERT INTO tbl_sample 
- (first_name, last_name, gender, hobby) 
- VALUES (:first_name, :last_name, :gender, :hobby)
+ SELECT * FROM user 
+ WHERE email = '".$received_data->email."'
+ ";
+ $statement = $connect->prepare($query);
+
+ $statement->execute();
+
+ $row_count = $statement->rowCount();
+ 
+ if ($row_count > 0) {
+    $output = array(
+        'message' => 'Email is already taken'
+    );
+ } else {
+    $query = "
+    INSERT INTO user 
+    (first, last, email, pass) 
+    VALUES (:first, :last, :email, :pass)
+    ";
+   
+    $statement = $connect->prepare($query);
+   
+    $statement->execute($data);
+   
+    $output = array(
+     'message' => 'Sign up succesfull'
+    );
+   
+ }
+ echo json_encode($output);
+}
+
+// login action
+if($received_data->action == 'login')
+{
+ $query = "
+ SELECT * FROM user 
+ WHERE email = '".$received_data->email."'
  ";
 
  $statement = $connect->prepare($query);
 
- $statement->execute($data);
+ $statement->execute();
 
- $output = array(
-  'message' => 'Data Inserted'
- );
+ $row_count = $statement->rowCount();
+ 
+ if ($row_count > 0) {
+    $result = $statement->fetchAll();
 
- echo json_encode($output);
+    foreach($result as $row)
+    {
+        $data['id'] = $row['id'];
+        $data['first'] = $row['first'];
+        $data['last'] = $row['last'];
+        $data['email'] = $row['email'];
+        $data['pass'] = $row['pass'];
+    }
+    
+    if ($received_data->pass == $data['pass']) {
+        $output = array(
+            'user' => $data
+        );
+        echo json_encode($output);
+    } else {
+        $output = array(
+            'message' => 'Password incorrect'
+        );    
+        echo json_encode($output);
+    }
+ } else {
+    $output = array(
+        'message' => 'Email is not found'
+    );    
+    echo json_encode($output);
+ }
 }
 
 // fetchSingle action
